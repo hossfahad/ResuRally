@@ -8,6 +8,7 @@ Interview Rally is a Next.js application that generates tailored interview quest
 - Integration with OpenAI API to generate tailored interview questions
 - Responsive design that works well on mobile and desktop
 - Beautiful UI using Tailwind CSS and Shadcn UI components
+- Backend data storage with Manifest service
 
 ## Prerequisites
 
@@ -35,10 +36,14 @@ npm install
 OPENAI_API_KEY=your-openai-api-key-here
 ```
 
-4. Start the development server
+4. Start the development server and backend services
 
 ```bash
+# In one terminal, start the Next.js frontend
 npm run dev
+
+# In another terminal, start the Manifest backend
+npm run manifest
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
@@ -52,11 +57,25 @@ npm run dev
 
 ## Deployment
 
-This application can be easily deployed to Vercel:
+This application can be deployed to Vercel with a separate backend deployment:
+
+### Frontend Deployment (Vercel)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Finterview-rally)
 
-Make sure to add your OpenAI API key as an environment variable in your Vercel project settings.
+Make sure to add the following environment variables in your Vercel project settings:
+- `OPENAI_API_KEY`: Your OpenAI API key
+- `MANIFEST_URL`: The URL of your deployed Manifest backend service
+
+### Backend Deployment
+
+The Manifest backend needs to be deployed separately. You have several options:
+
+1. **Railway**: Create a new project and deploy the Manifest service
+2. **Heroku**: Deploy the Manifest service as a separate app
+3. **Custom Server**: Set up and run the Manifest service on your own server
+
+After deploying the backend, set the `MANIFEST_URL` environment variable in your Vercel project to point to your backend service URL.
 
 ## Built With
 
@@ -67,6 +86,7 @@ Make sure to add your OpenAI API key as an environment variable in your Vercel p
 - [Shadcn UI](https://ui.shadcn.com/) - UI components
 - [React Hook Form](https://react-hook-form.com/) - Form validation
 - [Zod](https://zod.dev/) - Schema validation
+- [Manifest](https://www.manifest.so/) - Backend service for data storage
 
 ## License
 

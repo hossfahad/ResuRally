@@ -12,15 +12,15 @@ entities:
       - { name: job_description, type: text }
       - { name: created_at, type: date }
       - { name: questions, type: text }
-      - { name: score, type: number, optional: true }
+      - { name: score, type: number, nullable: true }
     belongsTo:
       - User
 
   InterviewHistory:
     properties:
       - { name: date, type: date }
-      - { name: answers, type: text, optional: true }
-      - { name: feedback, type: text, optional: true }
-      - { name: performance_score, type: number, optional: true }
+      - { name: answers, type: text, nullable: true }
+      - { name: feedback, type: text, nullable: true }
+      - { name: performance_score, type: number, nullable: true }
     belongsTo:
       - JobInterview

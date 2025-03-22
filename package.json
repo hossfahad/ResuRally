@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "manifest": "node node_modules/manifest/scripts/watch/watch.js",
-    "manifest:seed": "node node_modules/manifest/dist/manifest/src/seed/scripts/seed.js"
+    "manifest:seed": "node node_modules/manifest/dist/manifest/src/seed/scripts/seed.js",
+    "vercel-build": "npm run build",
+    "deploy:manifest": "node node_modules/manifest/dist/manifest/src/main.js ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
