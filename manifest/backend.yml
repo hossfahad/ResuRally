@@ -1,0 +1,26 @@
+name: Interview Rally Backend
+entities:
+  User:
+    properties:
+      - name
+      - email
+      - { name: created_at, type: date }
+
+  JobInterview:
+    properties:
+      - title
+      - { name: job_description, type: text }
+      - { name: created_at, type: date }
+      - { name: questions, type: text }
+      - { name: score, type: number, optional: true }
+    belongsTo:
+      - User
+
+  InterviewHistory:
+    properties:
+      - { name: date, type: date }
+      - { name: answers, type: text, optional: true }
+      - { name: feedback, type: text, optional: true }
+      - { name: performance_score, type: number, optional: true }
+    belongsTo:
+      - JobInterview

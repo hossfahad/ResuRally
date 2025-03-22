@@ -1,21 +1,28 @@
 'use client';
 
-import { useState } from 'react';
-import { Container, Title, Text, Group, Button, Paper, Tabs, Divider } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Container, Title, Text, Group, Button, Paper, Tabs, Divider, Grid } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconMicrophone, IconList, IconPlayerPlay } from '@tabler/icons-react';
 
 import JobDescriptionForm from '@/components/job-description/job-description-form';
 import QuestionsDisplay from '@/components/job-description/questions-display';
 import InterviewerMode from '@/components/job-description/interviewer-mode';
+import InterviewHistorySidebar from '@/components/interview-history/interview-history-sidebar';
+import { saveInterview, getInterviews, JobInterview } from '@/utils/interview-storage';
 
 export default function AppPage() {
   const [questions, setQuestions] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [interviewMode, setInterviewMode] = useState(true); // Enable interviewer mode by default
+  const [currentTitle, setCurrentTitle] = useState<string>('');
+  const [currentJobDescription, setCurrentJobDescription] = useState<string>('');
+  const [selectedInterview, setSelectedInterview] = useState<JobInterview | null>(null);
 
   // Handler for submitting job description
-  const handleSubmit = async (jobDescription: string) => {
+  const handleSubmit = async (jobDescription: string, title: string) => {
+    setCurrentTitle(title);
+    setCurrentJobDescription(jobDescription);
     setIsLoading(true);
     try {
       const response = await fetch('/api/generate-questions', {
@@ -33,6 +40,13 @@ export default function AppPage() {
 
       const data = await response.json();
       setQuestions(data.questions);
+      
+      // Save interview to storage
+      saveInterview({
+        title: title,
+        job_description: jobDescription,
+        questions: data.questions,
+      });
       
       // Show success notification with appropriate mode info
       if (interviewMode) {
@@ -63,6 +77,15 @@ export default function AppPage() {
   // Handler for resetting questions
   const handleReset = () => {
     setQuestions(null);
+    setSelectedInterview(null);
+  };
+  
+  // Handler for loading a selected interview
+  const handleSelectInterview = (interview: JobInterview) => {
+    setSelectedInterview(interview);
+    setCurrentTitle(interview.title);
+    setCurrentJobDescription(interview.job_description);
+    setQuestions(interview.questions);
   };
 
   // Function to format questions for interviewer mode
@@ -86,7 +109,7 @@ export default function AppPage() {
       background: 'linear-gradient(135deg, #fff7ed 0%, #ffffff 100%)',
       minHeight: '100vh'
     }}>
-      <Container size="md" py="xl">
+      <Container size="lg" py="xl">
         <header className="text-center mb-10">
           <div
             style={{
@@ -95,7 +118,7 @@ export default function AppPage() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontSize: '2.5rem',
-              fontWeight: 700,
+              fontWeight: 400,
               marginBottom: '0.5rem',
               fontFamily: "'Inter', sans-serif"
             }}
@@ -134,12 +157,9 @@ export default function AppPage() {
               
               {interviewMode && (
                 <Paper radius="md" p="sm" withBorder mt="md" bg="rgba(249, 115, 22, 0.05)">
-                  <Group>
-                    <IconPlayerPlay size={18} color="#EA580C" />
-                    <Text size="sm" c="orange.8">
-                      <strong>Interactive Mode:</strong> Experience a realistic interview simulation with questions presented one by one. Speak your responses aloud for the full interview experience.
-                    </Text>
-                  </Group>
+                  <Text size="sm" c="orange.8">
+                    <strong>Interactive Mode:</strong> Experience a realistic interview simulation with questions presented one by one. Speak your responses aloud for the full interview experience.
+                  </Text>
                 </Paper>
               )}
             </Paper>
@@ -147,21 +167,28 @@ export default function AppPage() {
         </header>
         
         <main>
-          {questions ? (
-            interviewMode ? (
-              <InterviewerMode 
-                questions={formattedQuestions} 
-                onReset={handleReset} 
-              />
-            ) : (
-              <QuestionsDisplay 
-                questions={questions} 
-                onReset={handleReset} 
-              />
-            )
-          ) : (
-            <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} />
-          )}
+          <Grid gutter="md">
+            <Grid.Col span={{ base: 12, md: 3 }}>
+              <InterviewHistorySidebar onSelectInterview={handleSelectInterview} />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 9 }}>
+              {questions ? (
+                interviewMode ? (
+                  <InterviewerMode 
+                    questions={formattedQuestions} 
+                    onReset={handleReset} 
+                  />
+                ) : (
+                  <QuestionsDisplay 
+                    questions={questions} 
+                    onReset={handleReset} 
+                  />
+                )
+              ) : (
+                <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} />
+              )}
+            </Grid.Col>
+          </Grid>
         </main>
         
         <Divider my="xl" />

@@ -17,6 +17,14 @@ import { IconBriefcase, IconSend } from '@tabler/icons-react';
 
 // Schema for job description form validation
 const formSchema = z.object({
+  title: z
+    .string()
+    .min(3, {
+      message: 'Title must be at least 3 characters.',
+    })
+    .max(100, {
+      message: 'Title cannot exceed 100 characters.',
+    }),
   jobDescription: z
     .string()
     .min(50, {
@@ -32,7 +40,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 // Type for the component props
 interface JobDescriptionFormProps {
-  onSubmit: (jobDescription: string) => Promise<void>;
+  onSubmit: (jobDescription: string, title: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -44,6 +52,7 @@ const JobDescriptionForm = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      title: '',
       jobDescription: '',
     },
   });
@@ -51,7 +60,7 @@ const JobDescriptionForm = ({
   // Handle form submission
   const handleSubmit = async (values: FormValues) => {
     try {
-      await onSubmit(values.jobDescription);
+      await onSubmit(values.jobDescription, values.title);
     } catch (_) {
       notifications.show({
         title: 'Process Failed',
@@ -93,6 +102,19 @@ const JobDescriptionForm = ({
         
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <input
+              type="text"
+              placeholder="E.g., Senior Software Engineer at Google"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              {...form.register('title')}
+              aria-label="Interview Title"
+            />
+            {errors.title && (
+              <Text size="xs" c="red">
+                {errors.title.message}
+              </Text>
+            )}
+            
             <Textarea
               placeholder="Paste the complete job description here..."
               label="Job Description"

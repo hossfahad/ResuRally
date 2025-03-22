@@ -6,47 +6,25 @@ import { IconBrandTwitter, IconBrandFacebook, IconBrandLinkedin } from '@tabler/
 
 export default function MarketingFooter() {
   const footerLinks = {
-    company: [
+    sections: [
       { label: 'Home', link: '/marketing' },
-      { label: 'Features', link: '/marketing/features' },
-      { label: 'Pricing', link: '/marketing/pricing' },
-      { label: 'About Us', link: '/marketing/about' }
-    ],
-    support: [
-      { label: 'FAQ', link: '/marketing/faq' },
-      { label: 'Help Center', link: '/marketing/help' },
-      { label: 'Contact Us', link: '/marketing/contact' }
+      { label: 'Features', link: '/marketing#features' },
+      { label: 'Pricing', link: '/marketing#pricing' }
     ],
     legal: [
       { label: 'Terms of Service', link: '/marketing/terms' },
-      { label: 'Privacy Policy', link: '/marketing/privacy' },
-      { label: 'Cookie Policy', link: '/marketing/cookies' }
+      { label: 'Privacy Policy', link: '/marketing/privacy' }
     ]
   };
 
   return (
     <footer className="py-10 bg-gray-100">
       <Container size="xl">
-        <SimpleGrid cols={{ base: 1, sm: 4 }} spacing="xl">
+        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xl">
           <div>
             <Text fw={700} mb="md">Interview Rally</Text>
             <Stack gap="xs">
-              {footerLinks.company.map((link) => (
-                <Link 
-                  key={link.label}
-                  href={link.link} 
-                  className="no-underline text-gray-600 hover:text-orange-600"
-                >
-                  <Text size="sm">{link.label}</Text>
-                </Link>
-              ))}
-            </Stack>
-          </div>
-          
-          <div>
-            <Text fw={700} mb="md">Support</Text>
-            <Stack gap="xs">
-              {footerLinks.support.map((link) => (
+              {footerLinks.sections.map((link) => (
                 <Link 
                   key={link.label}
                   href={link.link} 
