@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { MantineProvider, createTheme, ColorSchemeScript } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -33,10 +28,32 @@ const theme = createTheme({
       '#7C2D12', // 9
     ],
   },
-  fontFamily: "'Geist', sans-serif",
+  fontFamily: "'Inter', Calibri, sans-serif",
   headings: {
-    fontFamily: "'Geist', sans-serif",
-  }
+    fontFamily: "'Inter', sans-serif",
+  },
+  components: {
+    Text: {
+      defaultProps: {
+        ff: "Calibri, sans-serif",
+      },
+    },
+    Button: {
+      defaultProps: {
+        ff: "'Inter', sans-serif",
+      },
+    },
+    Title: {
+      defaultProps: {
+        ff: "'Inter', sans-serif",
+      },
+    },
+    Paper: {
+      defaultProps: {
+        style: { fontFamily: 'Calibri, sans-serif' },
+      },
+    },
+  },
 });
 
 export const metadata: Metadata = {
@@ -55,8 +72,12 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link 
+          href="https://fonts.cdnfonts.com/css/calibri-2" 
+          rel="stylesheet"
+        />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="top-center" />
           {children}

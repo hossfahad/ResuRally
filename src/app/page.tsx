@@ -96,12 +96,13 @@ export default function Home() {
               WebkitTextFillColor: 'transparent',
               fontSize: '2.5rem',
               fontWeight: 700,
-              marginBottom: '0.5rem'
+              marginBottom: '0.5rem',
+              fontFamily: "'Inter', sans-serif"
             }}
           >
             Interview Rally
           </div>
-          <Text color="dimmed" size="lg" mb="lg">
+          <Text color="dimmed" size="lg" mb="lg" style={{ fontFamily: 'Calibri, sans-serif' }}>
             Elevate your interview preparation with AI-powered personalized questions
           </Text>
           
