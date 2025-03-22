@@ -28,6 +28,10 @@ import {
 import MarketingNavbar from '@/components/marketing/navbar';
 import MarketingFooter from '@/components/marketing/footer';
 
+// Add image imports
+import appDescriptionFormImage from '@/assets/images/kaitlyn-baker-vZJdYl5JVXY-unsplash.jpg';
+import interviewSimulationImage from '@/assets/images/olena-bohovyk-dIMJWLx1YbE-unsplash.jpg';
+
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen">
@@ -172,11 +176,25 @@ export default function FeaturesPage() {
               </Stack>
             </div>
             <Box className="relative h-80 md:h-auto">
-              <div className="w-full h-full bg-gray-300 rounded-lg"></div>
+              <Image
+                src={appDescriptionFormImage}
+                alt="Interview Rally job description form"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain rounded-lg bg-gray-50"
+                priority
+              />
             </Box>
             
             <Box className="relative h-80 md:h-auto">
-              <div className="w-full h-full bg-gray-300 rounded-lg"></div>
+              <Image
+                src={interviewSimulationImage}
+                alt="Interview Rally simulation interface"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain rounded-lg bg-gray-50"
+                priority
+              />
             </Box>
             <div>
               <Title order={2} mb="lg">

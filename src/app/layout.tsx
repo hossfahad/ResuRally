@@ -78,7 +78,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider theme={theme} forceColorScheme="light">
           <Notifications position="top-center" />
           {children}
         </MantineProvider>

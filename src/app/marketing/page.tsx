@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -27,6 +25,11 @@ import {
 // Add these imports
 import MarketingNavbar from '@/components/marketing/navbar';
 import MarketingFooter from '@/components/marketing/footer';
+
+// Add image imports
+import appInActionImage from '@/assets/images/app-in-action.png';
+import appDescriptionFormImage from '@/assets/images/kaitlyn-baker-vZJdYl5JVXY-unsplash.jpg';
+import interviewSimulationImage from '@/assets/images/olena-bohovyk-dIMJWLx1YbE-unsplash.jpg';
 
 export default function MarketingPage() {
   return (
@@ -71,11 +74,13 @@ export default function MarketingPage() {
             </div>
             <Box className="relative h-80 md:h-auto">
               <Image
-                src="/interview-hero.jpg"
-                alt="Interview preparation scene"
+                src={appInActionImage}
+                alt="App in action"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover rounded-lg"
                 priority
+                style={{ objectPosition: 'center 30%' }}
               />
             </Box>
           </SimpleGrid>
@@ -162,10 +167,11 @@ export default function MarketingPage() {
           <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
             <Box className="relative h-80 md:h-auto">
               <Image
-                src="/testimonial-image.jpg"
-                alt="Person practicing interview"
+                src={appDescriptionFormImage}
+                alt="Interview Rally job description form"
                 fill
-                className="object-cover rounded-lg"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain rounded-lg bg-gray-50"
                 priority
               />
             </Box>
@@ -213,89 +219,94 @@ export default function MarketingPage() {
             Choose the plan that works best for your interview preparation needs
           </Text>
           
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
-            <Paper p="xl" radius="md" className="border border-gray-700 bg-gray-800">
-              <Badge color="gray" variant="outline" size="lg" radius="sm" mb="md">
-                Basic Plan
-              </Badge>
-              <Title order={1} fw={700} c="white">
-                $19<Text span size="sm" c="gray.3">/mo</Text>
-              </Title>
-              <Text mt="xs" mb="xl" c="gray.3">
-                Perfect for job seekers in active search
-              </Text>
-              
-              <Stack gap="xs" mb="xl">
-                {[
-                  "10 AI Interview Sessions",
-                  "Basic Response Analysis",
-                  "Job Description Analysis",
-                  "Question Database Access",
-                  "Email Support",
-                  "Mobile Access",
-                  "1 Interview Type",
-                  "Basic Reporting",
-                  "Standard Questions Library",
-                  "1 Export Format"
-                ].map((feature, index) => (
-                  <Group key={index} gap="xs">
-                    <IconCheck size={18} color="#F97316" />
-                    <Text size="sm" c="gray.2">{feature}</Text>
-                  </Group>
-                ))}
-              </Stack>
-              
-              <Button 
-                fullWidth 
-                color="orange" 
-                size="md" 
-                radius="md"
-              >
-                Get Started
-              </Button>
-            </Paper>
-            
-            <Paper p="xl" radius="md" className="border border-gray-700 bg-gray-800">
-              <Badge color="orange" variant="outline" size="lg" radius="sm" mb="md">
-                Pro Plan
-              </Badge>
-              <Title order={1} fw={700} c="white">
-                $19<Text span size="sm" c="gray.3">/mo</Text>
-              </Title>
-              <Text mt="xs" mb="xl" c="gray.3">
-                Ideal for professionals seeking career advancement
-              </Text>
-              
-              <Stack gap="xs" mb="xl">
-                {[
-                  "Unlimited AI Interview Sessions",
-                  "Advanced Response Analysis",
-                  "Custom Job Description Analysis",
-                  "Full Question Database Access",
-                  "Priority Email Support",
-                  "Mobile & Desktop Access",
-                  "All Interview Types",
-                  "Detailed Performance Reports",
-                  "Premium Questions Library",
-                  "Multiple Export Formats"
-                ].map((feature, index) => (
-                  <Group key={index} gap="xs">
-                    <IconCheck size={18} color="#F97316" />
-                    <Text size="sm" c="gray.2">{feature}</Text>
-                  </Group>
-                ))}
-              </Stack>
-              
-              <Button 
-                fullWidth 
-                color="orange" 
-                size="md" 
-                radius="md"
-              >
-                Get Started
-              </Button>
-            </Paper>
-          </SimpleGrid>
+          <div className="flex justify-center">
+            <table className="divide-y divide-gray-200 mt-12">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-0"
+                  >
+                    Plan
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                  >
+                    Price
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                  >
+                    Interviews included
+                  </th>
+                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                    <span className="sr-only">Subscribe</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr>
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
+                    Playing Around
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    $0
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    3 interviews
+                  </td>
+                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <Link
+                      href="/auth/signup"
+                      className="rounded-md bg-brand px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
+                      Get started
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
+                    Brushing Up
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    $5
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    5 interviews
+                  </td>
+                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <Link
+                      href="/auth/signup"
+                      className="rounded-md bg-brand px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
+                      Subscribe
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0">
+                    Help Me
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    $10
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                    15 interviews
+                  </td>
+                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                    <Link
+                      href="/auth/signup"
+                      className="rounded-md bg-brand px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
+                      Subscribe
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </Container>
       </section>
 
@@ -331,10 +342,11 @@ export default function MarketingPage() {
             </div>
             <Box className="relative h-80 md:h-auto">
               <Image
-                src="/interview-cta.jpg"
-                alt="Professional at interview"
+                src={interviewSimulationImage}
+                alt="Interview Rally simulation interface"
                 fill
-                className="object-cover rounded-lg"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain rounded-lg bg-gray-50"
                 priority
               />
             </Box>
