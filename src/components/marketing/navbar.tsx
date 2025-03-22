@@ -11,8 +11,8 @@ export default function MarketingNavbar() {
 
   const navLinks = [
     { link: '/marketing', label: 'Home' },
-    { link: '/marketing/pricing', label: 'Pricing' },
-    { link: '#', label: 'Help' }
+    { link: '/marketing#features', label: 'Features' },
+    { link: '/marketing#pricing', label: 'Pricing' }
   ];
 
   const navItems = navLinks.map((link) => (

@@ -88,7 +88,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Feature Section */}
-      <section className="py-20 bg-gray-50">
+      <section id="features" className="py-20 bg-gray-50">
         <Container size="xl">
           <Title order={2} ta="center" mb="sm">
             Experience the Future of Interviewing
@@ -107,6 +107,8 @@ export default function MarketingPage() {
                 Face interview questions that match real-world scenarios for your specific role and industry.
               </Text>
               <Button 
+                component={Link}
+                href="/app"
                 variant="light" 
                 color="orange" 
                 fullWidth 
@@ -127,6 +129,8 @@ export default function MarketingPage() {
                 Record your responses and get detailed feedback on your answers, delivery, and presence.
               </Text>
               <Button 
+                component={Link}
+                href="/app"
                 variant="light" 
                 color="orange" 
                 fullWidth 
@@ -147,6 +151,8 @@ export default function MarketingPage() {
                 Receive actionable insights that help you improve your responses and build confidence.
               </Text>
               <Button 
+                component={Link}
+                href="/app"
                 variant="light" 
                 color="orange" 
                 fullWidth 
@@ -195,6 +201,8 @@ export default function MarketingPage() {
                 <Text>Personalized feedback on your performance</Text>
               </Group>
               <Button 
+                component={Link}
+                href="#pricing"
                 variant="outline" 
                 color="orange" 
                 size="md" 
@@ -202,7 +210,7 @@ export default function MarketingPage() {
                 mt="lg"
                 rightSection={<IconArrowRight size={16} />}
               >
-                Learn More
+                View Pricing
               </Button>
             </div>
           </SimpleGrid>
@@ -210,7 +218,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gray-800 text-white">
+      <section id="pricing" className="py-20 bg-gray-800 text-white">
         <Container size="xl">
           <Title order={2} ta="center" mb="sm" c="white">
             Pricing Plans
@@ -331,6 +339,8 @@ export default function MarketingPage() {
                   Start Free
                 </Button>
                 <Button
+                  component={Link}
+                  href="#features"
                   variant="outline"
                   color="gray"
                   size="md"
