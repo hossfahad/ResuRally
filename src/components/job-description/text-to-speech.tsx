@@ -6,10 +6,9 @@ import { toast } from 'sonner';
 
 interface TextToSpeechProps {
   text: string;
-  questionIndex?: number;
 }
 
-const TextToSpeech = ({ text, questionIndex }: TextToSpeechProps) => {
+const TextToSpeech = ({ text }: TextToSpeechProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);

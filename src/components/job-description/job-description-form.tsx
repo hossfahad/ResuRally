@@ -55,7 +55,7 @@ const JobDescriptionForm = ({
   const handleSubmit = async (values: FormValues) => {
     try {
       await onSubmit(values.jobDescription);
-    } catch (error) {
+    } catch (_) {
       toast.error('Failed to generate interview questions. Please try again.');
     }
   };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
@@ -20,15 +20,8 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
-  // Auto-play the first question on component mount
-  useEffect(() => {
-    if (!hasStartedRef.current && questions.length > 0) {
-      hasStartedRef.current = true;
-      handleSpeakQuestion();
-    }
-  }, []);
-
-  const handleSpeakQuestion = async () => {
+  // Use useCallback to memoize the prepareQuestion function
+  const prepareQuestion = useCallback(async () => {
     setIsLoading(true);
     
     try {
@@ -57,11 +50,78 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
         audioRef.current.src = audioUrl;
       }
 
-      audioRef.current.play();
-      setIsPlaying(true);
+      // Don't autoplay - wait for user to press play
+      // Show a toast to guide the user
+      toast.info('Question ready! Click "Play" to hear it.', { duration: 3000 });
+      
     } catch (error) {
       console.error('Error generating speech:', error);
-      toast.error('Failed to speak the question. Please try again.');
+      toast.error('Failed to prepare the question audio. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentQuestion]);
+  
+  // Auto-play the first question on component mount
+  useEffect(() => {
+    if (!hasStartedRef.current && questions.length > 0) {
+      hasStartedRef.current = true;
+      prepareQuestion();
+    }
+  }, [questions.length, prepareQuestion]);
+  
+  const handleSpeakQuestion = async () => {
+    // If audio is already prepared, just play it
+    if (audioRef.current && audioRef.current.src) {
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch (error) {
+        console.error('Error playing audio:', error);
+        toast.error('Could not play audio. Please ensure audio permissions are enabled in your browser.');
+      }
+      return;
+    }
+    
+    // Otherwise prepare and play
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('/api/text-to-speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: currentQuestion }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      if (!audioRef.current) {
+        audioRef.current = new Audio(audioUrl);
+        
+        audioRef.current.addEventListener('ended', () => {
+          setIsPlaying(false);
+        });
+      } else {
+        audioRef.current.src = audioUrl;
+      }
+
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch (playError) {
+        console.error('Error playing audio:', playError);
+        toast.error('Could not play audio. Please ensure audio permissions are enabled in your browser.');
+      }
+    } catch (error) {
+      console.error('Error generating speech:', error);
+      toast.error('Failed to generate speech. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -75,10 +135,11 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
       }
       
       setCurrentQuestionIndex(prev => prev + 1);
+      setIsPlaying(false);
       
-      // Play the next question automatically after a brief delay
+      // Prepare next question but don't play automatically
       setTimeout(() => {
-        handleSpeakQuestion();
+        prepareQuestion();
       }, 500);
     }
   };
@@ -91,10 +152,11 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
       }
       
       setCurrentQuestionIndex(prev => prev - 1);
+      setIsPlaying(false);
       
-      // Play the previous question automatically after a brief delay
+      // Prepare previous question but don't play automatically
       setTimeout(() => {
-        handleSpeakQuestion();
+        prepareQuestion();
       }, 500);
     }
   };
@@ -161,7 +223,7 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
               size="sm"
               onClick={handleToggleAudio}
               disabled={isLoading}
-              className="border-orange-300 hover:bg-orange-100 text-orange-700"
+              className="border-orange-300 hover:bg-orange-100 text-orange-700 flex items-center gap-1"
             >
               {isLoading ? (
                 <span className="flex items-center gap-1">
@@ -184,7 +246,7 @@ const InterviewerMode = ({ questions, onReset }: InterviewerModeProps) => {
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <polygon points="5 3 19 12 5 21 5 3" strokeWidth="2" />
                   </svg>
-                  Replay
+                  {audioRef.current && audioRef.current.src ? "Play" : "Prepare Audio"}
                 </span>
               )}
             </Button>

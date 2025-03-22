@@ -92,7 +92,7 @@ const QuestionsDisplay = ({ questions, onReset }: QuestionsDisplayProps) => {
         <ol className="list-decimal list-inside space-y-4">
           {formattedQuestions.map((question, index) => (
             <li key={index} className="pl-2 flex items-start gap-2">
-              <TextToSpeech text={question} questionIndex={index} />
+              <TextToSpeech text={question} />
               <span className="text-base">{question}</span>
             </li>
           ))}

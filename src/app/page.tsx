@@ -36,7 +36,7 @@ export default function Home() {
       // Show success toast with appropriate mode info
       if (interviewMode) {
         toast.success(
-          "Your interview is starting! Listen to the questions and prepare your answers.",
+          "Your interview is ready! Click the Play button to hear each question.",
           { duration: 5000 }
         );
       } else {
@@ -113,7 +113,7 @@ export default function Home() {
         
         {!questions && interviewMode && (
           <p className="text-sm text-orange-700 bg-orange-100 p-2 rounded-md max-w-md mx-auto">
-            <span className="font-semibold">Interviewer Mode:</span> Questions will be presented one by one and read aloud automatically.
+            <span className="font-semibold">Interviewer Mode:</span> Questions will be presented one by one. Click the Play button to hear each question.
           </p>
         )}
       </header>

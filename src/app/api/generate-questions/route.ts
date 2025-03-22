@@ -21,11 +21,11 @@ export async function POST(request: NextRequest) {
 
     // Call the OpenAI API to generate interview questions
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: 'You are an expert interview coach. Generate 10 detailed and challenging interview questions based on the job description provided. Format the response as a numbered list with each question on a new line starting with a number followed by a period and a space. Focus on technical skills, behavioral scenarios, and problem-solving abilities relevant to the position.',
+          content: 'You are representing the hiring manager for the job provided by the user. Generate 10 interview questions based on the job description provided. Always start with a, so tell me a bit about yourself, mention that you have seen their resume but want to hear the story of their career, something beyond the paper. Also provide a quick introduction as someone from the company, and what this role is about, but make this clear enough for non-experts, but without dumbing it down. Format the response as a numbered list with each question on a new line starting with a number followed by a period and a space. Focus on technical skills, behavioral scenarios, and problem-solving abilities relevant to the position. The questions and your behavior should sound more casual while still professional. Add warmth to this response while maintaining its professionalism. Use more contractions and everyday language in this response. Use direct, personal language—speak to the reader, not at them.'
         },
         { role: 'user', content: jobDescription },
       ],
