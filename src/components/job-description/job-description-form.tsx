@@ -1,31 +1,29 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
-
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { notifications } from '@mantine/notifications';
+import { 
+  Paper, 
+  Title, 
+  Text, 
+  Textarea, 
+  Button, 
+  Group,
+  Box,
+} from '@mantine/core';
+import { IconBriefcase, IconSend } from '@tabler/icons-react';
 
 // Schema for job description form validation
 const formSchema = z.object({
   jobDescription: z
     .string()
     .min(50, {
-      message: 'Job description must be at least 50 characters long',
+      message: 'Job description must include at least 50 characters for meaningful analysis.',
     })
     .max(20000, {
-      message: 'Job description must not exceed 20,000 characters',
+      message: 'Job description exceeds the 20,000 character limit.',
     }),
 });
 
@@ -55,51 +53,75 @@ const JobDescriptionForm = ({
     try {
       await onSubmit(values.jobDescription);
     } catch (_) {
-      toast.error('Failed to generate interview questions. Please try again.');
+      notifications.show({
+        title: 'Process Failed',
+        message: 'We encountered an issue generating your interview questions. Please try again.',
+        color: 'red',
+      });
     }
   };
 
+  const { errors } = form.formState;
+
   return (
-    <Card className="w-full border-orange-200 overflow-hidden bg-white shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-orange-100 to-orange-50">
-        <CardTitle className="text-orange-800">Job Description</CardTitle>
-        <CardDescription className="text-orange-600">
-          Paste a job description to generate tailored interview questions
-        </CardDescription>
-      </CardHeader>
-      <Form {...form}>
+    <Paper radius="md" p="xl" withBorder shadow="md" style={{ position: 'relative' }}>
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(255, 255, 255, 0.7)',
+        zIndex: 10,
+        display: isLoading ? 'flex' : 'none',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {isLoading && <div className="loading-spinner" />}
+      </div>
+      
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Box>
+          <Group align="center" mb="xs">
+            <IconBriefcase size={24} color="#F97316" />
+            <Title order={2} size="h3">Job Description Analysis</Title>
+          </Group>
+          <Text c="dimmed" size="sm">
+            Paste a job description below to generate tailored interview questions for your preparation.
+          </Text>
+        </Box>
+        
         <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <CardContent className="p-6">
-            <FormField
-              control={form.control}
-              name="jobDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-orange-700">Job Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Paste the job description here..."
-                      className="min-h-[200px] resize-y border-orange-200 focus-visible:ring-orange-500"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-orange-600" />
-                </FormItem>
-              )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Textarea
+              placeholder="Paste the complete job description here..."
+              label="Job Description"
+              description="Our AI will analyze the job requirements to create relevant interview questions."
+              minRows={8}
+              maxRows={12}
+              autosize
+              required
+              error={errors.jobDescription?.message}
+              {...form.register('jobDescription')}
             />
-          </CardContent>
-          <CardFooter className="bg-gradient-to-r from-orange-50 to-white p-6">
+            
             <Button 
               type="submit" 
-              className="w-full bg-orange-600 hover:bg-orange-700" 
-              disabled={isLoading}
+              fullWidth
+              color="orange"
+              leftSection={<IconSend size={18} />}
+              loading={isLoading}
             >
-              {isLoading ? 'Generating Questions...' : 'Start Interview'}
+              {isLoading ? 'Analyzing Job Description...' : 'Generate Interview Questions'}
             </Button>
-          </CardFooter>
+            
+            <Text size="xs" c="dimmed" ta="center">
+              Your data is processed securely. We do not store job descriptions or use them for training.
+            </Text>
+          </div>
         </form>
-      </Form>
-    </Card>
+      </div>
+    </Paper>
   );
 };
 

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Toaster } from 'sonner';
-import { toast } from 'sonner';
+import { Container, Title, Text, Group, Button, Paper, Tabs, Divider } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { IconMicrophone, IconList, IconPlayerPlay } from '@tabler/icons-react';
 
 import JobDescriptionForm from '@/components/job-description/job-description-form';
 import QuestionsDisplay from '@/components/job-description/questions-display';
@@ -33,21 +34,27 @@ export default function Home() {
       const data = await response.json();
       setQuestions(data.questions);
       
-      // Show success toast with appropriate mode info
+      // Show success notification with appropriate mode info
       if (interviewMode) {
-        toast.success(
-          "Your interview is ready! Click the Play button to hear each question.",
-          { duration: 5000 }
-        );
+        notifications.show({
+          title: 'Interview Prepared',
+          message: 'Your personalized interview session is ready. Click Play to begin your practice.',
+          color: 'orange',
+        });
       } else {
-        toast.success(
-          "Questions generated! Click the play button next to a question to hear it spoken aloud.",
-          { duration: 5000 }
-        );
+        notifications.show({
+          title: 'Questions Generated',
+          message: 'Your tailored interview questions are ready. Utilize the audio feature for a more immersive experience.',
+          color: 'orange',
+        });
       }
     } catch (error) {
       console.error('Error generating questions:', error);
-      toast.error('Failed to generate questions. Please try again.');
+      notifications.show({
+        title: 'Generation Failed',
+        message: 'We encountered an issue creating your questions. Please try again.',
+        color: 'red',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -75,70 +82,98 @@ export default function Home() {
   const formattedQuestions = formatQuestionsForInterviewer(questions);
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8 bg-gradient-to-b from-orange-50 to-white">
-      <Toaster position="top-center" />
-      
-      <header className="w-full max-w-4xl text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-orange-400">
-          Interview Rally
-        </h1>
-        <p className="text-orange-700 mb-4">
-          Generate tailored interview questions based on job descriptions
-        </p>
-        
-        {!questions && (
-          <div className="flex justify-center items-center gap-4 mb-4">
-            <button
-              onClick={() => setInterviewMode(true)}
-              className={`px-4 py-2 rounded-full transition-all ${
-                interviewMode 
-                  ? 'bg-orange-500 text-white shadow-md' 
-                  : 'bg-orange-100 text-orange-700'
-              }`}
-            >
-              Interviewer Mode
-            </button>
-            <button
-              onClick={() => setInterviewMode(false)}
-              className={`px-4 py-2 rounded-full transition-all ${
-                !interviewMode 
-                  ? 'bg-orange-500 text-white shadow-md' 
-                  : 'bg-orange-100 text-orange-700'
-              }`}
-            >
-              List Mode
-            </button>
+    <div style={{ 
+      background: 'linear-gradient(135deg, #fff7ed 0%, #ffffff 100%)',
+      minHeight: '100vh'
+    }}>
+      <Container size="md" py="xl">
+        <header className="text-center mb-10">
+          <div
+            style={{
+              backgroundImage: 'linear-gradient(to right, #EA580C, #FB923C)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontSize: '2.5rem',
+              fontWeight: 700,
+              marginBottom: '0.5rem'
+            }}
+          >
+            Interview Rally
           </div>
-        )}
+          <Text color="dimmed" size="lg" mb="lg">
+            Elevate your interview preparation with AI-powered personalized questions
+          </Text>
+          
+          {!questions && (
+            <Paper radius="md" p="md" withBorder mb="lg">
+              <Text size="sm" mb="md" fw={500}>
+                Select your preparation mode:
+              </Text>
+              <Tabs 
+                value={interviewMode ? 'interviewer' : 'list'} 
+                onChange={(value) => setInterviewMode(value === 'interviewer')}
+                radius="xl"
+              >
+                <Tabs.List grow>
+                  <Tabs.Tab 
+                    value="interviewer"
+                    leftSection={<IconMicrophone size={16} />}
+                  >
+                    Interactive Interview
+                  </Tabs.Tab>
+                  <Tabs.Tab 
+                    value="list"
+                    leftSection={<IconList size={16} />}
+                  >
+                    Question List
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
+              
+              {interviewMode && (
+                <Paper radius="md" p="sm" withBorder mt="md" bg="rgba(249, 115, 22, 0.05)">
+                  <Group>
+                    <IconPlayerPlay size={18} color="#EA580C" />
+                    <Text size="sm" c="orange.8">
+                      <strong>Interactive Mode:</strong> Experience a realistic interview simulation with questions presented one by one. Speak your responses aloud for the full interview experience.
+                    </Text>
+                  </Group>
+                </Paper>
+              )}
+            </Paper>
+          )}
+        </header>
         
-        {!questions && interviewMode && (
-          <p className="text-sm text-orange-700 bg-orange-100 p-2 rounded-md max-w-md mx-auto">
-            <span className="font-semibold">Interviewer Mode:</span> Questions will be presented one by one. Click the Play button to hear each question.
-          </p>
-        )}
-      </header>
-      
-      <main className="w-full max-w-3xl mx-auto mb-8">
-        {questions ? (
-          interviewMode ? (
-            <InterviewerMode 
-              questions={formattedQuestions} 
-              onReset={handleReset} 
-            />
+        <main>
+          {questions ? (
+            interviewMode ? (
+              <InterviewerMode 
+                questions={formattedQuestions} 
+                onReset={handleReset} 
+              />
+            ) : (
+              <QuestionsDisplay 
+                questions={questions} 
+                onReset={handleReset} 
+              />
+            )
           ) : (
-            <QuestionsDisplay 
-              questions={questions} 
-              onReset={handleReset} 
-            />
-          )
-        ) : (
-          <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} />
-        )}
-      </main>
-      
-      <footer className="w-full max-w-4xl text-center text-sm text-orange-600 mt-auto pt-8">
-        <p>&copy; {new Date().getFullYear()} Interview Rally. All rights reserved.</p>
-      </footer>
+            <JobDescriptionForm onSubmit={handleSubmit} isLoading={isLoading} />
+          )}
+        </main>
+        
+        <Divider my="xl" />
+        
+        <footer className="text-center">
+          <Text size="sm" c="dimmed">
+            &copy; {new Date().getFullYear()} Interview Rally. All rights reserved.
+          </Text>
+          <Text size="xs" c="dimmed" mt={5}>
+            Powered by advanced AI to help you succeed in your career journey.
+          </Text>
+        </footer>
+      </Container>
     </div>
   );
 }

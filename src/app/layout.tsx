@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { MantineProvider, createTheme, ColorSchemeScript } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,10 +16,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Define a custom theme with orange as the primary color
+const theme = createTheme({
+  primaryColor: 'orange',
+  colors: {
+    orange: [
+      '#FFF7ED', // 0
+      '#FFEDD5', // 1
+      '#FED7AA', // 2
+      '#FDBA74', // 3
+      '#FB923C', // 4
+      '#F97316', // 5
+      '#EA580C', // 6
+      '#C2410C', // 7
+      '#9A3412', // 8
+      '#7C2D12', // 9
+    ],
+  },
+  fontFamily: "'Geist', sans-serif",
+  headings: {
+    fontFamily: "'Geist', sans-serif",
+  }
+});
+
 export const metadata: Metadata = {
   title: "Interview Rally - Interactive Interview Practice",
-  description: "Practice for job interviews with AI-powered questions presented by a virtual interviewer.",
-  keywords: ["interview", "questions", "job", "preparation", "ai", "openai", "practice", "virtual interviewer"],
+  description: "Practice for job interviews with AI-powered questions presented by a virtual interviewer. Prepare confidently with personalized questions based on any job description.",
+  keywords: ["interview preparation", "job questions", "interview practice", "career preparation", "ai interviewer", "voice interview", "interview skills"],
 };
 
 export default function RootLayout({
@@ -26,25 +52,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{
-          background: 'linear-gradient(135deg, #fff7ed 0%, #ffffff 100%)'
-        }}
-      >
-        {children}
-        <Toaster toastOptions={{
-          style: {
-            background: '#FDBA74',
-            color: '#7C2D12',
-            border: '1px solid #FB923C'
-          },
-          classNames: {
-            toast: 'group',
-            title: 'text-orange-900 font-medium',
-            description: 'text-orange-800',
-          }
-        }} />
+      <head>
+        <ColorSchemeScript />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <Notifications position="top-center" />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
